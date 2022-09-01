@@ -13,30 +13,6 @@ function App() {
   const [count, setCount] = React.useState(1)
   const [listOfTodos, setListOfTodos] = React.useState<TodoObject[]>([])
 
-  React.useEffect(() => {
-
-    const todos: TodoObject[] = JSON.parse(localStorage.getItem("todos")!)
-    const savedCount: number = JSON.parse(localStorage.getItem("savedCount")!)
-
-    setCount(savedCount)
-
-    if (todos) {
-      setListOfTodos(todos)
-    }
-
-
-  }, [])
-
-  React.useEffect(() => {
-
-    localStorage.setItem("todos", JSON.stringify(listOfTodos))
-
-  }, [listOfTodos])
-
-  React.useEffect(() => {
-    localStorage.setItem("savedCount", JSON.stringify(count))
-  }, [count])
-
   const deleteTodo = (id: number): void => {
 
     for (let i = 0; i < listOfTodos.length; i++) {
