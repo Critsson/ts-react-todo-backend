@@ -6,12 +6,12 @@ import "../styles/Todo.css"
 
 interface TodoProps {
     description: string,
-    id: number,
-    deleteTodo: (id: number) => void,
-    editTodo: (id: number, newDesc: string) => void
+    tid: number,
+    deleteTodo: (tid: number) => Promise<void>,
+    editTodo: (tid: number, newDesc: string) => Promise<void>
 }
 
-export default function Todo({ description, id, deleteTodo, editTodo }: TodoProps) {
+export default function Todo({ description, tid, deleteTodo, editTodo }: TodoProps) {
 
     const [editing, setEditing] = React.useState(false)
     const [newDescription, setNewDescription] = React.useState(description)
@@ -19,7 +19,7 @@ export default function Todo({ description, id, deleteTodo, editTodo }: TodoProp
     const updateText = (e: React.FormEvent<HTMLInputElement>): void => setNewDescription(e.currentTarget.value)
 
     const updateTodo = (): void => {
-        editTodo(id, newDescription)
+        editTodo(tid, newDescription)
         setEditing(false)
     }
 
@@ -33,15 +33,17 @@ export default function Todo({ description, id, deleteTodo, editTodo }: TodoProp
         <>
             {!editing ?
                 <div className="todo_container">
+                    <p>{tid}</p>
                     <p>{description}</p>
                     <div onClick={() => setEditing(true)} className="icon_container">
                         <EditIcon sx={{ width: "1.4vw", height: "1.4vw" }} />
                     </div>
-                    <div onClick={() => deleteTodo(id)} className="icon_container">
+                    <div onClick={() => deleteTodo(tid)} className="icon_container">
                         <DeleteIcon sx={{ width: "1.4vw", height: "1.4vw" }} />
                     </div>
                 </div> :
                 <div className="editing_container">
+                    <p>{tid}</p>
                     <input onKeyDown={(e) => handleEnterKey(e)} onChange={(e) => updateText(e)} className="text" type="text" placeholder="New Todo..." value={newDescription} />
                     <div onClick={() => updateTodo()} className="icon_container">
                         <CheckIcon sx={{ width: "1.8vw", height: "1.8vw" }} />

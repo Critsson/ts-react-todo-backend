@@ -3,61 +3,72 @@ import Todo from "./components/Todo"
 import './styles/App.css';
 
 interface TodoObject {
-  id: number,
+  tid: number,
   description: string
 }
 
 function App() {
 
   const [text, setText] = React.useState("")
-  const [count, setCount] = React.useState(1)
   const [listOfTodos, setListOfTodos] = React.useState<TodoObject[]>([])
+  const [loading, setLoading] = React.useState(true);
 
-  const deleteTodo = (id: number): void => {
-
-    for (let i = 0; i < listOfTodos.length; i++) {
-
-      if (id === listOfTodos[i].id) {
-        let placeholder: TodoObject[] = listOfTodos.concat()
-        placeholder.splice(i, 1)
-        setListOfTodos(placeholder)
-        return
-      }
+  React.useEffect(() => {
+    if (loading === true) {
+      fetch("http://localhost:5000/todos")
+        .then(res => res.json())
+        .then(data => setListOfTodos(data))
     }
 
-    console.error("No todo of that id exists")
+    setLoading(false)
+  }, [])
 
-  }
-
-  const editTodo = (id: number, newDesc: string): void => {
-
-    for (let i = 0; i < listOfTodos.length; i++) {
-      if (id === listOfTodos[i].id) {
-        let placeholder: TodoObject[] = listOfTodos.concat()
-        placeholder[i].description = newDesc
-        setListOfTodos(placeholder)
-        return
-      }
-    }
-
-    console.error("No todo of that id exists")
-
-  }
-
-  const submitForm = (e: React.FormEvent): void => {
+  const submitForm = async (e: React.FormEvent): Promise<void> => {
 
     e.preventDefault()
-    let placeholder: TodoObject[] = listOfTodos.concat({ id: count, description: text })
 
-    setListOfTodos(placeholder)
+    await fetch("http://localhost:5000/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ description: text })
+    })
+
+    await fetch("http://localhost:5000/todos")
+      .then(res => res.json())
+      .then(data => setListOfTodos(data))
+
     setText("")
-    setCount(count + 1)
+  }
+
+  const deleteTodo = async (tid: number): Promise<void> => {
+    await fetch(`http://localhost:5000/todos/${tid}`, {
+      method: "DELETE",
+    })
+    await fetch("http://localhost:5000/todos")
+      .then(res => res.json())
+      .then(data => setListOfTodos(data))
+  }
+
+  const editTodo = async (tid: number, newDescription: string): Promise<void> => {
+      await fetch(`http://localhost:5000/todos/${tid}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({description: newDescription})
+      })
+
+      await fetch("http://localhost:5000/todos")
+      .then(res => res.json())
+      .then(data => setListOfTodos(data))
   }
 
   const updateText = (e: React.FormEvent<HTMLInputElement>): void => setText(e.currentTarget.value)
 
   const listOfTodoElements: JSX.Element[] = listOfTodos.map((todo) => {
-    return <Todo key={todo.id} id={todo.id} description={todo.description} deleteTodo={deleteTodo} editTodo={editTodo} />
+    return <Todo key={todo.tid} tid={todo.tid} description={todo.description} deleteTodo={deleteTodo} editTodo={editTodo} />
   })
 
   return (
@@ -69,9 +80,9 @@ function App() {
         <input onChange={(e) => updateText(e)} className="text_input" type="text" placeholder="Task..." value={text} />
         <button className="submit_button" type="submit">Submit</button>
       </form>
-      <div className="todos_container">
+      {!loading ? <div className="todos_container">
         {listOfTodoElements}
-      </div>
+      </div> : <div>Loading...</div>}
     </div>
   );
 }
