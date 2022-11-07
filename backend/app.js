@@ -6,7 +6,7 @@ const cors = require("cors")
 
 const pool = new Pool({
     user: "postgres",
-    host: "localhost",
+    host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASS,
     port: process.env.DB_PORT
