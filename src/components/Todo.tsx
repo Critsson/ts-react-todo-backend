@@ -42,7 +42,6 @@ export default function Todo({ description, tid, deleteTodo, editTodo }: TodoPro
                     </div>
                 </div> :
                 <div className="editing_container">
-                    <p>{tid}</p>
                     <input onKeyDown={(e) => handleEnterKey(e)} onChange={(e) => updateText(e)} className="text" type="text" placeholder="New Todo..." value={newDescription} />
                     <div onClick={() => updateTodo()} className="icon_container">
                         <CheckIcon sx={{ width: "1.8vw", height: "1.8vw" }} />
