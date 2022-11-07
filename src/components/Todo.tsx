@@ -33,7 +33,6 @@ export default function Todo({ description, tid, deleteTodo, editTodo }: TodoPro
         <>
             {!editing ?
                 <div className="todo_container">
-                    <p>{tid}</p>
                     <p>{description}</p>
                     <div onClick={() => setEditing(true)} className="icon_container">
                         <EditIcon sx={{ width: "1.4vw", height: "1.4vw" }} />
