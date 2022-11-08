@@ -15,7 +15,7 @@ function App() {
 
   React.useEffect(() => {
     if (loading === true) {
-      fetch("http://localhost:5000/todos")
+      fetch("https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos")
         .then(res => res.json())
         .then(data => setListOfTodos(data))
     }
@@ -27,7 +27,7 @@ function App() {
 
     e.preventDefault()
 
-    await fetch("http://localhost:5000/todos", {
+    await fetch("https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -35,7 +35,7 @@ function App() {
       body: JSON.stringify({ description: text })
     })
 
-    await fetch("http://localhost:5000/todos")
+    await fetch("https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos")
       .then(res => res.json())
       .then(data => setListOfTodos(data))
 
@@ -43,16 +43,16 @@ function App() {
   }
 
   const deleteTodo = async (tid: number): Promise<void> => {
-    await fetch(`http://localhost:5000/todos/${tid}`, {
+    await fetch(`https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos/${tid}`, {
       method: "DELETE",
     })
-    await fetch("http://localhost:5000/todos")
+    await fetch("https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos")
       .then(res => res.json())
       .then(data => setListOfTodos(data))
   }
 
   const editTodo = async (tid: number, newDescription: string): Promise<void> => {
-      await fetch(`http://localhost:5000/todos/${tid}`, {
+      await fetch(`https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos/${tid}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -60,7 +60,7 @@ function App() {
         body: JSON.stringify({description: newDescription})
       })
 
-      await fetch("http://localhost:5000/todos")
+      await fetch("https://l45p1gcvi6.execute-api.us-east-1.amazonaws.com/dev/todos")
       .then(res => res.json())
       .then(data => setListOfTodos(data))
   }
